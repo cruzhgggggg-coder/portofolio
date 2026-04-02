@@ -1,7 +1,8 @@
 // @ts-nocheck
-import React, { useRef, Suspense, useState } from "react";
+import React, { useRef, Suspense, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial, Sphere, Float, PerspectiveCamera, Stars } from "@react-three/drei";
+import { useScroll as useMotionScroll } from "motion/react";
 import * as THREE from "three";
 
 declare global {
@@ -280,6 +281,8 @@ function StreamWave() {
 }
 
 export function Hero3D() {
+  const { scrollYProgress } = useMotionScroll();
+
   return (
     <div className="absolute inset-0 z-10 pointer-events-none">
       <Canvas 
@@ -288,25 +291,39 @@ export function Hero3D() {
         camera={{ position: [0, 8, 18], fov: 45 }}
       >
         <Suspense fallback={null}>
-          <SceneContent />
+          <SceneContent scrollYProgress={scrollYProgress} />
         </Suspense>
       </Canvas>
     </div>
   );
 }
 
-function SceneContent() {
+function SceneContent({ scrollYProgress }: { scrollYProgress: any }) {
+  const groupRef = useRef<THREE.Group>(null);
+
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    // Subtle breathing/floating camera effect
-    state.camera.position.y = 8 + Math.sin(time * 0.5) * 0.5;
+    const scroll = scrollYProgress.get();
+
+    // Scroll-based camera movement
+    // Moves from [0, 8, 18] to [0, 15, 30] as user scrolls
+    state.camera.position.y = THREE.MathUtils.lerp(8, 15, scroll) + Math.sin(time * 0.5) * 0.5;
+    state.camera.position.z = THREE.MathUtils.lerp(18, 30, scroll);
     state.camera.position.x = Math.cos(time * 0.3) * 0.3;
-    state.camera.lookAt(0, 0, 0);
+    
+    // Look slightly higher as we scroll down
+    const lookAtY = THREE.MathUtils.lerp(0, 5, scroll);
+    state.camera.lookAt(0, lookAtY, 0);
+
+    if (groupRef.current) {
+      // Rotate the entire scene content slightly based on scroll
+      groupRef.current.rotation.y = scroll * Math.PI * 0.2;
+    }
   });
 
   return (
-    <>
-      <fog attach="fog" args={["#000", 10, 40]} />
+    <group ref={groupRef}>
+      <fog attach="fog" args={["#000", 10, 50]} />
       <ambientLight intensity={0.2} />
       <spotLight 
         position={[20, 20, 10]} 
@@ -325,6 +342,6 @@ function SceneContent() {
       <GeometricBeacons />
       <StreamWave />
       <FuturisticBuilding />
-    </>
+    </group>
   );
 }
