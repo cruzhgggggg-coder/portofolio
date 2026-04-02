@@ -1,55 +1,10 @@
-import React, { useEffect, useState, useRef, Suspense } from "react";
-import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "motion/react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, MeshDistortMaterial, Sphere, Box, Torus } from "@react-three/drei";
-import * as THREE from "three";
+import React, { useEffect, useState, useRef } from "react";
+import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
 import { Project } from "../types";
-import { ArrowUpRight, Box as BoxIcon, Image as ImageIcon } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { ImmersiveBackground } from "../components/ImmersiveBackground";
 
-function ProjectViewer3D({ projectId }: { projectId: string }) {
-  return (
-    <div className="w-full h-full bg-black/20">
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-        <Suspense fallback={null}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#00f2ff" />
-          <pointLight position={[-10, -10, -10]} intensity={1} color="#7000ff" />
-          
-          <Float speed={2} rotationIntensity={1} floatIntensity={1}>
-            {projectId === "1" && (
-              <mesh>
-                <octahedronGeometry args={[1.5, 0]} />
-                <MeshDistortMaterial 
-                  color="#00f2ff" 
-                  speed={2} 
-                  distort={0.4} 
-                  emissive="#00f2ff" 
-                  emissiveIntensity={0.5}
-                  wireframe
-                />
-              </mesh>
-            )}
-            {projectId === "3" && (
-              <mesh>
-                <icosahedronGeometry args={[1.5, 0]} />
-                <meshStandardMaterial 
-                  color="#7000ff" 
-                  metalness={1} 
-                  roughness={0.1} 
-                  emissive="#7000ff"
-                  emissiveIntensity={0.5}
-                  wireframe
-                />
-              </mesh>
-            )}
-          </Float>
-          
-          <OrbitControls enablePan={false} minDistance={3} maxDistance={10} />
-        </Suspense>
-      </Canvas>
-    </div>
-  );
-}
+import { Button } from "../components/Button";
 
 export function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -69,43 +24,7 @@ export function Projects() {
 
   return (
     <div className="relative pt-32 pb-24 px-6 overflow-hidden">
-      {/* Immersive Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Subtle Grid */}
-        <div className="absolute inset-0 opacity-[0.03]" 
-          style={{ 
-            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-            backgroundSize: '100px 100px'
-          }} 
-        />
-        
-        {/* Drifting Particles */}
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-brand-primary/20 rounded-full"
-            initial={{ 
-              x: Math.random() * 100 + "%", 
-              y: Math.random() * 100 + "%",
-              opacity: 0 
-            }}
-            animate={{ 
-              y: ["-10%", "110%"],
-              opacity: [0, 0.5, 0]
-            }}
-            transition={{ 
-              duration: 15 + Math.random() * 10, 
-              repeat: Infinity, 
-              delay: Math.random() * 10,
-              ease: "linear"
-            }}
-          />
-        ))}
-        
-        {/* Ambient Glows */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 blur-[150px] rounded-full" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-secondary/5 blur-[180px] rounded-full" />
-      </div>
+      <ImmersiveBackground />
 
       <div className="relative max-w-7xl mx-auto z-10">
         <header className="mb-16">
@@ -132,17 +51,15 @@ export function Projects() {
             className="flex flex-wrap gap-4"
           >
             {categories.map((cat) => (
-              <button
+              <Button
                 key={cat}
                 onClick={() => setFilter(cat)}
-                className={`px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all duration-500 ${
-                  filter === cat 
-                    ? "bg-white text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]" 
-                    : "glass text-white/50 hover:text-white hover:bg-white/10"
-                }`}
+                variant={filter === cat ? "primary" : "secondary"}
+                size="sm"
+                className={filter === cat ? "shadow-[0_0_30px_rgba(255,255,255,0.2)]" : ""}
               >
                 {cat}
-              </button>
+              </Button>
             ))}
           </motion.div>
         </header>
@@ -158,7 +75,6 @@ export function Projects() {
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const [viewMode, setViewMode] = useState<"image" | "3d">("image");
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -169,7 +85,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (viewMode === "3d") return; // Disable tilt in 3D mode to avoid conflict with OrbitControls
     const rect = e.currentTarget.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -201,8 +116,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX: viewMode === "image" ? rotateX : 0,
-        rotateY: viewMode === "image" ? rotateY : 0,
+        rotateX,
+        rotateY,
         transformStyle: "preserve-3d",
       }}
       className="group cursor-pointer relative"
@@ -211,75 +126,40 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         style={{ transform: "translateZ(50px)" }}
         className="relative aspect-[4/5] md:aspect-video overflow-hidden bg-white/5 rounded-[40px] mb-8 shadow-2xl"
       >
-        <AnimatePresence mode="wait">
-          {viewMode === "image" ? (
-            <motion.div
-              key="image"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full h-full"
-            >
-              {/* Glow Effect on Hover */}
-              <div className="absolute inset-0 bg-brand-primary/0 group-hover:bg-brand-primary/5 transition-colors duration-700 z-10" />
-              
-              {/* Parallax Background Layer */}
-              <motion.div 
-                className="absolute inset-0 bg-gradient-to-br from-brand-primary/30 via-transparent to-brand-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 z-0"
-                initial={{ scale: 1.2, x: 0, y: 0 }}
-                whileHover={{ scale: 1.4, x: -30, y: -30 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-              />
-              
-              <motion.img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 relative z-0"
-                whileHover={{ scale: 1.15 }}
-                transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
-                referrerPolicy="no-referrer"
-              />
-              
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center z-20">
-                <motion.div 
-                  initial={{ scale: 0, rotate: -45 }}
-                  whileHover={{ scale: 1.1, rotate: 0 }}
-                  className="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.4)]"
-                >
-                  <ArrowUpRight className="w-10 h-10" />
-                </motion.div>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="3d"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full h-full"
-            >
-              <ProjectViewer3D projectId={project.id} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* 3D Toggle Button */}
-        {project.hasModel && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setViewMode(viewMode === "image" ? "3d" : "image");
-            }}
-            className="absolute top-6 right-6 z-40 w-12 h-12 glass rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"
+        {/* Glow Effect on Hover */}
+        <div className="absolute inset-0 bg-brand-primary/0 group-hover:bg-brand-primary/5 transition-colors duration-700 z-10" />
+        
+        {/* Parallax Background Layer */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-br from-brand-primary/30 via-transparent to-brand-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 z-0"
+          initial={{ scale: 1.2, x: 0, y: 0 }}
+          whileHover={{ scale: 1.4, x: -30, y: -30 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+        />
+        
+        <motion.img
+          src={project.image}
+          alt={project.title}
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 relative z-0"
+          whileHover={{ scale: 1.15 }}
+          transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
+          referrerPolicy="no-referrer"
+        />
+        
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center z-20">
+          <motion.div 
+            initial={{ scale: 0, rotate: -45 }}
+            whileHover={{ scale: 1.1, rotate: 0 }}
+            className="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.4)]"
           >
-            {viewMode === "image" ? <BoxIcon className="w-5 h-5" /> : <ImageIcon className="w-5 h-5" />}
-          </button>
-        )}
+            <ArrowUpRight className="w-10 h-10" />
+          </motion.div>
+        </div>
 
         {/* Subtle Overlay Text */}
         <div className="absolute bottom-8 left-8 z-30 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
           <span className="text-white font-mono text-[10px] uppercase tracking-[0.3em] bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-            {viewMode === "image" ? "Explore Project" : "Interactive 3D"}
+            Explore Project
           </span>
         </div>
       </div>

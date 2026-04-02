@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, Hexagon } from "lucide-react";
 import { cn } from "../lib/utils";
 
+import { Button } from "./Button";
+
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
@@ -56,12 +58,9 @@ export function Navbar() {
               {item.label}
             </Link>
           ))}
-          <Link
-            to="/contact"
-            className="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-brand-primary transition-colors"
-          >
+          <Button to="/contact" size="sm">
             Hire Me
-          </Link>
+          </Button>
         </div>
 
         {/* Mobile Toggle */}

@@ -29,6 +29,25 @@
   @apply bg-clip-text text-transparent bg-linear-to-r from-brand-primary via-brand-secondary to-brand-accent;
 }
 
+@keyframes text-wave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-wave {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    to right,
+    var(--color-brand-primary),
+    var(--color-brand-secondary),
+    var(--color-brand-accent),
+    var(--color-brand-primary)
+  );
+  background-size: 300% auto;
+  animation: text-wave 5s linear infinite;
+}
+
 .glow-hover {
   @apply transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,242,255,0.3)];
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Hexagon, Layers, Cpu, Globe, Award, Zap, Shield, Code } from "lucide-react";
+import { ImmersiveBackground } from "../components/ImmersiveBackground";
 
 export function About() {
   const containerVariants = {
@@ -25,38 +26,7 @@ export function About() {
 
   return (
     <div className="relative pt-32 pb-24 px-6 overflow-hidden">
-      {/* Immersive Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.03]" 
-          style={{ 
-            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-            backgroundSize: '100px 100px'
-          }} 
-        />
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-brand-primary/20 rounded-full"
-            initial={{ 
-              x: Math.random() * 100 + "%", 
-              y: Math.random() * 100 + "%",
-              opacity: 0 
-            }}
-            animate={{ 
-              y: ["-10%", "110%"],
-              opacity: [0, 0.3, 0]
-            }}
-            transition={{ 
-              duration: 20 + Math.random() * 10, 
-              repeat: Infinity, 
-              delay: Math.random() * 10,
-              ease: "linear"
-            }}
-          />
-        ))}
-        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-brand-secondary/5 blur-[150px] rounded-full" />
-        <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-brand-primary/5 blur-[180px] rounded-full" />
-      </div>
+      <ImmersiveBackground />
 
       <div className="relative max-w-7xl mx-auto z-10">
         {/* Hero Section */}

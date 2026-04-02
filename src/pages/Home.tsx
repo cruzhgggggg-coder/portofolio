@@ -4,6 +4,8 @@ import { ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Project } from "../types";
 import { Hero3D } from "../components/Hero3D";
+import { ImmersiveBackground } from "../components/ImmersiveBackground";
+import { Button } from "../components/Button";
 
 export function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -16,13 +18,11 @@ export function Home() {
   }, []);
 
   return (
-    <div className="pt-20">
+    <div className="relative pt-20 overflow-hidden">
+      <ImmersiveBackground />
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/10 blur-[120px] rounded-full animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary/10 blur-[120px] rounded-full animate-pulse delay-1000" />
-        </div>
         <Hero3D />
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
@@ -35,7 +35,7 @@ export function Home() {
               Digital Architect & Designer
             </span>
             <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-8 leading-[0.9]">
-              WEAVING <span className="text-gradient">LIGHT</span> INTO <br />
+              WEAVING <span className="text-wave">LIGHT</span> INTO <br />
               DIGITAL <span className="italic font-light">STRUCTURES</span>
             </h1>
             <p className="text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed">
@@ -43,19 +43,15 @@ export function Home() {
               Specializing in futuristic UI/UX and motion systems.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <Link
-                to="/projects"
-                className="group px-8 py-4 bg-white text-black font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-brand-primary transition-all"
+              <Button 
+                to="/projects" 
+                rightIcon={<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               >
                 View Portfolio
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                to="/about"
-                className="px-8 py-4 glass text-white font-bold uppercase tracking-widest hover:bg-white/10 transition-all"
-              >
+              </Button>
+              <Button to="/about" variant="secondary">
                 The Process
-              </Link>
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -67,9 +63,14 @@ export function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-6 bg-white/[0.02]">
+      <section className="relative py-24 px-6 z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-12"
+          >
             <div className="p-8 glass rounded-2xl hover:border-brand-primary/50 transition-colors group">
               <div className="w-12 h-12 bg-brand-primary/10 flex items-center justify-center rounded-lg mb-6 group-hover:bg-brand-primary/20 transition-colors">
                 <Sparkles className="w-6 h-6 text-brand-primary" />
@@ -97,14 +98,19 @@ export function Home() {
                 Built on solid foundations that scale, ensuring your digital presence remains future-proof and resilient.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Featured Projects */}
-      <section className="py-24 px-6">
+      <section className="relative py-24 px-6 z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8"
+          >
             <div>
               <span className="text-brand-primary font-mono text-xs uppercase tracking-widest mb-4 block">Selected Works</span>
               <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter uppercase">Featured <br />Architectures</h2>
@@ -112,7 +118,7 @@ export function Home() {
             <Link to="/projects" className="text-white/50 hover:text-white flex items-center gap-2 uppercase tracking-widest text-xs font-bold transition-colors">
               View All Projects <ArrowRight className="w-4 h-4" />
             </Link>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {projects.map((project, index) => (
@@ -147,22 +153,24 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
+      <section className="relative py-24 px-6 z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="relative p-12 md:p-24 glass rounded-[3rem] overflow-hidden text-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative p-12 md:p-24 glass rounded-[3rem] overflow-hidden text-center"
+          >
             <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-brand-primary/10 via-transparent to-brand-accent/10 pointer-events-none" />
             <h2 className="text-4xl md:text-7xl font-display font-bold tracking-tighter mb-8 uppercase">Ready to build the <br /><span className="text-gradient">Future?</span></h2>
             <p className="text-xl text-white/50 max-w-xl mx-auto mb-12">
               Let's collaborate on your next digital masterpiece. 
               Currently accepting new architectural commissions.
             </p>
-            <Link
-              to="/contact"
-              className="inline-block px-12 py-5 bg-white text-black font-bold uppercase tracking-widest hover:bg-brand-primary transition-all"
-            >
+            <Button to="/contact" size="lg">
               Start a Project
-            </Link>
-          </div>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </div>

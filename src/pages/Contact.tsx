@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Send, Mail, MapPin, Phone, Hexagon } from "lucide-react";
+import { ImmersiveBackground } from "../components/ImmersiveBackground";
+
+import { Button } from "../components/Button";
 
 export function Contact() {
   const [formState, setFormState] = useState({
@@ -24,8 +27,10 @@ export function Contact() {
   };
 
   return (
-    <div className="pt-32 pb-24 px-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative pt-32 pb-24 px-6 overflow-hidden">
+      <ImmersiveBackground />
+      
+      <div className="relative max-w-7xl mx-auto z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -85,12 +90,14 @@ export function Contact() {
                 </div>
                 <h3 className="text-3xl font-display font-bold uppercase tracking-tight mb-4">Transmission Received</h3>
                 <p className="text-white/50">Your message has been successfully encrypted and sent. I will respond shortly.</p>
-                <button 
+                <Button 
                   onClick={() => setSubmitted(false)}
-                  className="mt-8 text-brand-primary font-bold uppercase tracking-widest text-xs hover:underline"
+                  variant="ghost"
+                  size="sm"
+                  className="mt-8"
                 >
                   Send another message
-                </button>
+                </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-6 relative z-10">
@@ -140,14 +147,14 @@ export function Contact() {
                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                   />
                 </div>
-                <button
-                  disabled={isSubmitting}
+                <Button
+                  isLoading={isSubmitting}
                   type="submit"
-                  className="mt-4 w-full py-5 bg-white text-black font-bold uppercase tracking-widest hover:bg-brand-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                  className="mt-4 w-full"
+                  rightIcon={<Send className="w-4 h-4" />}
                 >
-                  {isSubmitting ? "Encrypting..." : "Send Transmission"}
-                  <Send className="w-4 h-4" />
-                </button>
+                  Send Transmission
+                </Button>
               </form>
             )}
           </motion.div>
