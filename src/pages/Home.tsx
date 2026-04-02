@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Project } from "../types";
+import { Hero3D } from "../components/Hero3D";
 
 export function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -10,17 +11,19 @@ export function Home() {
   useEffect(() => {
     fetch("/api/projects")
       .then((res) => res.json())
-      .then((data) => setProjects(data.slice(0, 3)));
+      .then((data) => setProjects(data.slice(0, 3)))
+      .catch((err) => console.error("Failed to fetch projects:", err));
   }, []);
 
   return (
     <div className="pt-20">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/20 blur-[120px] rounded-full animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary/20 blur-[120px] rounded-full animate-pulse delay-1000" />
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/10 blur-[120px] rounded-full animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary/10 blur-[120px] rounded-full animate-pulse delay-1000" />
         </div>
+        <Hero3D />
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <motion.div
@@ -125,7 +128,7 @@ export function Home() {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -133,7 +136,7 @@ export function Home() {
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-brand-primary font-mono text-[10px] uppercase tracking-widest mb-2 block">{project.category}</span>
-                    <h4 className="text-xl font-display font-bold uppercase tracking-tight group-hover:text-brand-primary transition-colors">{project.title}</h4>
+                    <h4 className="text-xl font-display font-bold uppercase tracking-tight transition-colors duration-300 group-hover:text-brand-primary">{project.title}</h4>
                   </div>
                   <span className="text-white/30 font-mono text-xs">{project.year}</span>
                 </div>

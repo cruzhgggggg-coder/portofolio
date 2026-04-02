@@ -6,6 +6,7 @@ export interface Project {
   description: string;
   image: string;
   status: string;
+  hasModel?: boolean;
 }
 
 export interface NavItem {

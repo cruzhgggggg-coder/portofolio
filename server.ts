@@ -20,7 +20,8 @@ async function startServer() {
         year: "2024",
         description: "A real-time data visualization platform for high-frequency algorithmic trading interfaces.",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDpXwMS9L46ICh5oCgxtB5szEqlcjW8GG7N3udG_kCQ3ApURGK8FEv-HcHQVBBXNiEuSQ_4l-6l2QIKajr2XRintBMgIrjYSb2j7hldAatFGGmvbxKF4P_CUWQewgZhgExL0iHMBuEkUc6HCr4Y4Z3wG_p-cETGvR2GHPzruA_yTS4FClA0NxyeTgQuTp5aFD9CKl4TIUCmadcVgIWckbE9450iExBOzmgR8xgLR6X6EtmxIp0wilZa5msx1pesm-ER90u6obZX1tmk",
-        status: "Active"
+        status: "Active",
+        hasModel: true
       },
       {
         id: "2",
@@ -38,7 +39,8 @@ async function startServer() {
         year: "2024",
         description: "Visual identity system based on crystalline aesthetics and light refraction.",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCy5pT4fzcmP5ICAac1j43KsSq4eD3jqfiUyuWs6d_Zle8SlUKf-pPTF6t4CqZuvl5osf-VlnAF_2CcU8147M9mxfddinkv2uqsXzcsk6tYgoMDZeJOLXX_qv0vJFIV43g4q0WchqMmdy-K73NtFfeNDnwx_2oFNVocwgodKGTPd7oOhlq_Az5mqt9GUCoQ-Z1tV0UE5ZzVTT7ZfYH45hkt4s7qtitXhledbJZW2NG3ul_Hs2V9AbQgQfM43x78iobpmYSC6lr8BQyD",
-        status: "Active"
+        status: "Active",
+        hasModel: true
       },
       {
         id: "4",
